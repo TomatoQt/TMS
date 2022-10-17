@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <constant name="struts.enable.DynamicMethodInvocation" value="false" />
+    <package name="strutsBean" extends="struts-default" namespace="/">
+    <!--拦截器-->
+    <interceptors>
+            <interceptor name="storageApplyInterceptor" class="zjut.interceptor.storageApplyInterceptor"/>
+            <interceptor name="fixApplyInterceptor" class="zjut.interceptor.fixApplyInterceptor"/>
+            <interceptor name="scrapInterceptor" class="zjut.interceptor.ScrapInterceptor"/>
+     </interceptors>
+        <!--登录跳转-->
+        <action name="loginAction" class="zjut.action.StaffAction" method="login">
+            <result name="o1">/HomeOperatorI.jsp</result>
+            <result name="o2">/HomeOperatorII.jsp</result>
+            <result name="supervisor">/HomeSupervisor.jsp</result>
+            <result name="manager">/HomeManager.jsp</result>
+            <result name="admin">/HomeAdmin.jsp</result>
+            <result name="error">/Login.jsp</result>
+        </action>
+        <!--员工信息更改-->
+        <action name="ChangeStaffInfoAction" class="zjut.action.StaffAction" method="update">
+            <result name="success">/StaffProfileAdmin.jsp</result>
+            <result name="fail">/</result>
+        </action>
+
+        <action name="AllStaff" class="zjut.action.StaffAction" method="allStaff">
+            <result name="success">/</result>
+            <result name="fail">/</result>
+        </action>
+
+        <!--        添加用户-->
+        <action name="register" class="zjut.action.StaffAction" method="register">
+        	<result name="success" type="redirectAction">AddStaffPage</result>
+        	<result name="fail">/</result>
+        </action>
+        <action name="AddStaffPage" class="zjut.action.DeptAction" method="getAllDept">
+            <result name="success">/AddStaffAdmin.jsp</result>
+        </action>
+        <!--入库-->
+        <action name="InTool" class="zjut.action.StaffAction" method="In">
+            <result name="success">/ToolReturnOperatorI.jsp</result>
+        </action>
+
+
+        <action name="lookReturnNumber" class="zjut.action.IoAction" method="lookReturnNumber">
+            <result name="success">/ToolReturnOperatorI.jsp</result>
+        </action>
+
+        <action name="ReturnApply" class="zjut.action.IoAction" method="applyIn">
+            <result name="success" type="redirectAction">lookReturnNumber</result>
+        </action>
+
+        <!--        出库-->
+        <action name="outTool" class="zjut.action.ToolTypeAction" method="getAll">
+            <result name="success">/ToolBorrowOperatorI.jsp</result>
+        </action>
+
+        <action name="BorrowApply"  class="zjut.action.IoAction" method="applyOut">
+            <result name="success" type="redirectAction">outTool</result>
+            <result name="false" type="redirectAction">outTool</result>
+            <result name="input" type="redirectAction">outTool</result>
+        </action>
+
+        <action name="lookBorrow" class="zjut.action.IoAction" method="CheckBorrow">
+            <result name="o1">/BorrowPermitOperatorII.jsp</result>
+            <result name="o0">/CheckBorrowPermitOperatorI.jsp</result>
+        </action>
+
+        <action name="PermitBorrow" class="zjut.action.IoAction" method="examineYes">
+            <result name="success">/BorrowPermitOperatorII.jsp</result>
+        </action>
+
+        <action name="NotPermitBorrow" class="zjut.action.IoAction" method="examineNo">
+            <result name="success">/BorrowPermitOperatorII.jsp</result>
+        </action>
+
+        <!--        退出登录-->
+        <action name="logout" class="zjut.action.StaffAction" method="logout">
+            <result name="success">/Login.jsp</result>
+        </action>
+
+        <!--员工删除-->
+        <action name="deleteStaff" class="zjut.action.StaffAction" method="deleteStaff">
+            <result name="success" type="redirectAction">fireStaffPage</result>
+        </action>
+        <!--员工开除-->
+        <action name="fireStaffPage" class="zjut.action.StaffAction" method="getAllUsers">
+            <result name="success">/FireStaffAdmin.jsp</result>
+        </action>
+        
+        <action name="editStaffPage" class="zjut.action.StaffAction" method="getAllUsers">
+            <result name="success">/EditStaffInfoAdmin.jsp</result>
+        </action>
+
+        <action name="editStaff" class="zjut.action.StaffAction" method="editStaff">
+            <result name="success" type="redirectAction">editStaffPage</result>
+        </action>
+
+        <!--        Repair-->
+        <action name="repairTool" class="zjut.action.ToolAction" method="getAll">
+            <result name="success">/ToolRepairSubmitOperatorI.jsp</result>
+        </action>
+
+        <action name="RepairApply" class="zjut.action.RepairAction" method="apply">
+            <result name="success" type="redirectAction">/repairTool</result>
+            <result name="false" type="redirectAction">/repairTool</result>
+            <result name="input" type="redirectAction">/repairTool</result>
+            <!-- 配置系统默认拦截器 -->
+            <interceptor-ref name="defaultStack"/>
+            <!-- 配置自定义拦截器 -->
+            <interceptor-ref name="fixApplyInterceptor"/>
+        </action>
+
+        <action name="checkRepair" class="zjut.action.RepairAction" method="checkRepair">
+            <result name="o0">/CheckRepairOperatorI.jsp</result>
+            <result name="o1">/RepairPermitOperatorII.jsp</result>
+        </action>
+
+        <action name="PermitRepair" class="zjut.action.RepairAction" method="examineYes">
+            <result name="success">checkRepair</result>
+        </action>
+
+        <action name="NotPermitRepair" class="zjut.action.RepairAction" method="examineNo">
+            <result name="success">checkRepair</result>
+        </action>
+
+<!--        tooltype-->
+        <action name="editToolTypePage" class="zjut.action.ToolTypeAction" method="getAll">
+            <result name="success">/EditToolTypeSupervisor.jsp</result>
+        </action>
+
+        <action name="CreateToolType" class="zjut.action.ToolTypeAction" method="create">
+            <result name="success">/AddToolTypeSupervisor.jsp</result>
+        </action>
+
+        <action name="EditToolType" class="zjut.action.ToolTypeAction" method="update">
+            <result name="success" type="redirectAction">editToolTypePage</result>
+        </action>
+
+
+<!--        BUY-->
+        <action name="buyToolPage" class="zjut.action.ToolTypeAction" method="getAll">
+            <result name="success">/ToolBuySubmitOperatorII.jsp</result>
+        </action>
+        
+
+        <action name="buyToolApply" class="zjut.action.BuyAction" method="apply">
+            <result name="success" type="redirectAction">buyToolPage</result>
+            <!-- 配置系统默认拦截器 -->
+            <interceptor-ref name="defaultStack"/>
+            <!-- 配置自定义拦截器 -->
+            <interceptor-ref name="storageApplyInterceptor"/>
+        </action>
+
+        <action name="lookBuy" class="zjut.action.BuyAction" method="checkBuy">
+            <result name="o1">/CheckBuyOperatorII.jsp</result>
+            <result name="o2">/BuyPermitSupervisor.jsp</result>
+            <result name="o3">/BuyPermitManager.jsp</result>
+        </action>
+
+        <!--监管员批准-->
+        <action name="PermitBuySuper_*" class="zjut.action.BuyAction" method="{1}">
+            <result name="success" type="redirectAction">lookBuy</result>
+            <allowed-methods>examineOK,examineNO</allowed-methods>
+        </action>
+
+        <!--经理批准-->
+        <action name="PermitBuyManager_*" class="zjut.action.BuyAction" method="{1}">
+            <result name="success" type="redirectAction">lookBuy</result>
+            <allowed-methods>finalExamineOK,finalExamineNO</allowed-methods>
+        </action>
+
+
+
+        <!--        SCRAP-->
+        <action name="scrapToolPage" class="zjut.action.ToolTypeAction" method="getAll">
+            <result name="success">/ToolScrapSubmitOperatorII.jsp</result>
+
+        </action>
+
+
+        <action name="scrapToolApply" class="zjut.action.ScrapAction" method="apply">
+            <result name="success" type="redirectAction">scrapToolPage</result>
+            <result name="ScrapRecordExist">/HomeOperatorII.jsp</result>
+            <!--配置系统默认拦截器-->
+            <interceptor-ref name="defaultStack"/>
+            <!--配置自定义拦截器-->
+            <interceptor-ref name="scrapInterceptor"/>
+        </action>
+
+        <action name="lookScrap" class="zjut.action.ScrapAction" method="checkScrap">
+            <result name="o1">/CheckScrapOperatorII.jsp</result>
+            <result name="super">/ScrapPermitSupervisor.jsp</result>
+            <result name="manager">/ScrapPermitManager.jsp</result>
+        </action>
+
+        <!--监管员批准-->
+        <action name="PermitScrapSuper_*" class="zjut.action.ScrapAction" method="{1}">
+            <result name="success" type="redirectAction">lookScrap</result>
+            <allowed-methods>examineOK,examineNO</allowed-methods>
+        </action>
+
+        <!--经理批准-->
+        <action name="PermitScrapManager_*" class="zjut.action.ScrapAction" method="{1}">
+            <result name="success" type="redirectAction">lookScrap</result>
+            <allowed-methods>finalExamineOK,finalExamineNO</allowed-methods>
+        </action>
+
+<!--        生命周期-->
+        <action name="lookLifeCircle" class="zjut.action.ToolAction" method="getAll">
+            <result name="success">/ToolLifeCycleSelectManager.jsp</result>
+        </action>
+        <action name="lifeCircle" class="zjut.action.LifeCycleAction" method="get">
+            <result name="success">/ToolLifeCycleManager.jsp</result>
+        </action>
+    </package>
+</struts>

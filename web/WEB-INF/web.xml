@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <welcome-file-list>
+        <welcome-file>Login.jsp</welcome-file>
+    </welcome-file-list>
+
+
+
+    <!--过滤除登录页面外的url请求-->
+<!--    <filter>-->
+<!--        <filter-name>accessFilter</filter-name>-->
+<!--        <filter-class>zjut.filter.LoginFilter</filter-class>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>accessFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+    <!--过滤非法跳转-->
+<!--    <filter>-->
+<!--        <filter-name>PageFilter</filter-name>-->
+<!--        <filter-class>zjut.filter.PageFilter</filter-class>-->
+<!--        <init-param>-->
+<!--            <param-name>ignores</param-name>-->
+<!--            <param-value>/loginAction</param-value>-->
+<!--        </init-param>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>PageFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+    <!-- 定义 Struts2 的核心 Filter -->
+<!--    <filter>-->
+<!--        <filter-name>struts2</filter-name>-->
+<!--        <filter-class>-->
+<!--            org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter-->
+<!--        </filter-class>-->
+<!--    </filter>-->
+
+
+    <!-- 让 Struts2 的核心 Filter 拦截所有请求 -->
+<!--    <filter-mapping>-->
+<!--        <filter-name>struts2</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+
+<!--    不同权限过滤-->
+<!--    <filter>-->
+<!--        <filter-name>PageFilter</filter-name>-->
+<!--        <filter-class>zjut.filter.PageFilter</filter-class>-->
+<!--        <init-param>-->
+<!--            <param-name>ignores</param-name>-->
+<!--            <param-value>/loginAction,/login.jsp</param-value>-->
+<!--        </init-param>-->
+<!--    </filter>-->
+<!--    <filter-mapping>-->
+<!--        <filter-name>PageFilter</filter-name>-->
+<!--        <url-pattern>/*</url-pattern>-->
+<!--    </filter-mapping>-->
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+</web-app>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.0.xsd
+       http://www.springframework.org/schema/util
+       http://www.springframework.org/schema/util/spring-util.xsd"
+       default-lazy-init="true">
+
+    <!-- 数据源、sessionFactory -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/tms?characterEncoding=utf-8&amp;useSSL=false"/>
+        <property name="username" value="root"/>
+        <property name="password" value="root"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.connection.autocommit">true</prop>
+                <prop key="hibernate.allow_update_outside_transaction">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+        <property name="packagesToScan" value="zjut.po"/>
+        <!-- <property name="annotatedClasses" value="zjut.po."/> -->
+        <property name="annotatedClasses">
+            <list>
+                <value>zjut.po.BuyrecordEntity</value>
+                <value>zjut.po.DeptEntity</value>
+                <value>zjut.po.IorecordEntity</value>
+                <value>zjut.po.RepairrecordEntity</value>
+                <value>zjut.po.ScraprecordEntity</value>
+                <value>zjut.po.StaffEntity</value>
+                <value>zjut.po.ToolEntity</value>
+                <value>zjut.po.TooltypeEntity</value>
+            </list>
+        </property>
+        <!--        <property name="mappingResources">-->
+        <!--            <list>-->
+        <!--                <value>zjut/po/BuyrecordEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/DeptEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/IorecordEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/RepairrecordEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/ScraprecordEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/StaffEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/ToolEntity.hbm.xml</value>-->
+        <!--                <value>zjut/po/TooltypeEntity.hbm.xml</value>-->
+        <!--            </list>-->
+        <!--        </property>-->
+    </bean>
+    <!-- DAO -->
+    <bean id="baseDao" class="zjut.dao.BaseHibernateDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <bean id="staffDao" class="zjut.dao.StaffDao" parent="baseDao"/>
+    <bean id="toolDao" class="zjut.dao.ToolDao" parent="baseDao"/>
+    <bean id="toolTypeDao" class="zjut.dao.ToolTypeDao" parent="baseDao"/>
+    <bean id="repairDao" class="zjut.dao.RepairDao" parent="baseDao"/>
+    <bean id="ioDao" class="zjut.dao.IoDao" parent="baseDao"/>
+    <bean id="scrapDao" class="zjut.dao.ScrapDao" parent="baseDao"/>
+    <bean id="buyDao" class="zjut.dao.BuyDao" parent="baseDao" />
+    <bean id="deptDao" class="zjut.dao.DeptDao" parent="baseDao"/>
+
+    <!-- Service -->
+    <bean id="staffService" class="zjut.service.StaffService">
+        <property name="staffDao" ref="staffDao"/>
+    </bean>
+    <bean id="toolTypeService" class="zjut.service.ToolTypeService">
+        <property name="toolTypeDao" ref="toolTypeDao"/>
+    </bean>
+    <bean id="repairService" class="zjut.service.RepairService">
+        <property name="dao" ref="repairDao"/>
+    </bean>
+    <bean id="scrapService" class="zjut.service.ScrapService">
+        <property name="dao" ref="scrapDao"/>
+    </bean>
+    <bean id="buyService" class="zjut.service.BuyService">
+        <property name="dao" ref="buyDao"/>
+        <property name="toolTypeDao" ref="toolTypeDao"/>
+        <property name="toolDao" ref="toolDao"/>
+    </bean>
+    <bean id="ioService" class="zjut.service.IoService">
+        <property name="dao" ref="ioDao"/>
+        <property name="toolDao" ref="toolDao"/>
+    </bean>
+    <bean id="toolService" class="zjut.service.ToolService">
+        <property name="toolDao" ref="toolDao"/>
+    </bean>
+    <bean id="deptService" class="zjut.service.DeptService">
+        <property name="deptDao" ref="deptDao"/>
+    </bean>
+
+    <!-- Action -->
+    <bean id="toolTypeAction" class="zjut.action.ToolTypeAction">
+        <property name="toolTypeService" ref="toolTypeService" />
+    </bean>
+    <bean id="repairAction" class="zjut.action.RepairAction">
+        <property name="repairService" ref="repairService"/>
+        <property name="staffService" ref="staffService"/>
+        <property name="toolService" ref="toolService"/>
+    </bean>
+    <bean id="scrapAction" class="zjut.action.ScrapAction">
+        <property name="scrapService" ref="scrapService"/>
+        <property name="toolService" ref="toolService"/>
+    </bean>
+    <bean id="buyAction" class="zjut.action.BuyAction">
+        <property name="buyService" ref="buyService"/>
+        <property name="toolService" ref="toolService"/>
+        <property name="toolTypeService" ref="toolTypeService"/>
+        <property name="staffService" ref="staffService"/>
+    </bean>
+    <bean id="ioAction" class="zjut.action.IoAction">
+        <property name="ioService" ref="ioService"/>
+        <property name="staffService" ref="staffService"/>
+        <property name="toolService" ref="toolService"/>
+    </bean>
+    <bean id="staffAction" class="zjut.action.StaffAction">
+        <property name="repairService" ref="repairService"/>
+        <property name="staffService" ref="staffService"/>
+        <property name="buyService" ref="buyService"/>
+        <property name="ioService" ref="ioService"/>
+        <property name="scrapService" ref="scrapService"/>
+        <property name="toolService" ref="toolService"/>
+        <property name="deptService" ref="deptService"/>
+    </bean>
+    <bean id="toolAction" class="zjut.action.ToolAction">
+        <property name="toolService" ref="toolService"/>
+    </bean>
+    <bean id="deptAction" class="zjut.action.DeptAction">
+        <property name="deptService" ref="deptService"/>
+    </bean>
+
+    <bean id="lifeCycleAction" class="zjut.action.LifeCycleAction">
+        <property name="toolService" ref="toolService"/>
+        <property name="staffService" ref="staffService"/>
+        <property name="buy" ref="buyService"/>
+        <property name="io" ref="ioService"/>
+        <property name="repair" ref="repairService"/>
+        <property name="scrap" ref="scrapService"/>
+    </bean>
+    <!-- utils -->
+</beans>
